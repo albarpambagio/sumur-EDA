@@ -8,6 +8,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import seaborn.objects as so
 
+#TODO
+#cek null masing masing objektif
+
 cnx = sqlite3.connect('olist.db')
 
 
@@ -36,11 +39,21 @@ payment_sort = payment_sort.reset_index()
 #sns.boxplot(y=df_payment['payment_value'])
 df_p_median = df_payment['payment_value'].median()
 
-#cek null masing masing objektif
-df_join = df.merge(df_status, on=['customer_id'], how='outer')
-dc_duplicate_1 = df_join.isnull().sum()
-print(dc_duplicate_1)
 
+df_join = df.merge(df_status, on=['customer_id'], how='outer')
+df_join_drop = df_join.drop(['customer_zip_code_prefix', 'order_purchase_timestamp',
+       'order_approved_at', 'order_delivered_carrier_date',
+       'order_delivered_customer_date', 'order_estimated_delivery_date', 
+       'order_purchase_timestamp',
+       'order_approved_at', 'order_delivered_carrier_date',
+       'order_delivered_customer_date', 'order_estimated_delivery_date'], axis=1)
+df_join_count = df_join_drop.groupby(['order_status', 'customer_city']).count()
+max_counts = df_join_count.groupby(['order_status', 'customer_city'])['customer_id'].max()
+
+
+# Display the result
+print("Maximum Counts of Orders for Each Order Status:")
+print(max_counts)
 
 '''
 dc_duplicate_1 = df.duplicated().sum()
