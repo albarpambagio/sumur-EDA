@@ -48,12 +48,13 @@ df_join_drop = df_join.drop(['customer_zip_code_prefix', 'order_purchase_timesta
        'order_approved_at', 'order_delivered_carrier_date',
        'order_delivered_customer_date', 'order_estimated_delivery_date'], axis=1)
 df_join_count = df_join_drop.groupby(['order_status', 'customer_city']).count()
-max_counts = df_join_count.groupby(['order_status', 'customer_city'])['customer_id'].max()
+max_counts = df_join_count.groupby('order_status')['customer_id'].max()
+max_counts_one = df_join_count.groupby(level=['order_status', 'customer_city'])['customer_id'].max()
+selecting = max_counts_one.where(max_counts_one.iloc() == max_counts['customer_id'])
 
-
-# Display the result
 print("Maximum Counts of Orders for Each Order Status:")
-print(max_counts)
+print(selecting)
+
 
 '''
 dc_duplicate_1 = df.duplicated().sum()
@@ -61,3 +62,9 @@ dc_null = df.isnull().sum()
 dc_format = df.value_counts()
 '''
 
+'''
+for x in df_join_count['customer_id']:
+    for y in max_counts['customer_id']:
+        if x in y:
+            max_counts_list.append(x)    
+'''
