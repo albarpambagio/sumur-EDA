@@ -48,12 +48,12 @@ df_join_drop = df_join.drop(['customer_zip_code_prefix', 'order_purchase_timesta
        'order_approved_at', 'order_delivered_carrier_date',
        'order_delivered_customer_date', 'order_estimated_delivery_date'], axis=1)
 df_join_count = df_join_drop.groupby(['order_status', 'customer_city']).count()
-max_counts = df_join_count.groupby('order_status')['customer_id'].max()
-max_counts_one = df_join_count.groupby(level=['order_status', 'customer_city'])['customer_id'].max()
-selecting = max_counts_one.where(max_counts_one.iloc() == max_counts['customer_id'])
+#max_counts = df_join_count.groupby('order_status')['customer_id'].max()
+max_counts_1 = df_join_count.reset_index(level="customer_city")
+max_counts_count = max_counts_1.value_counts(subset='customer_city')
+max_counts_max = max_counts_1.groupby('order_status').max()
 
-print("Maximum Counts of Orders for Each Order Status:")
-print(selecting)
+print(max_counts_max)
 
 
 '''
@@ -68,3 +68,6 @@ for x in df_join_count['customer_id']:
         if x in y:
             max_counts_list.append(x)    
 '''
+
+#max_counts_one = df_join_count.groupby(level=['order_status', 'customer_city'])['customer_id'].max()
+#selecting = max_counts_one.where(max_counts_one.iloc() == max_counts['customer_id'])
