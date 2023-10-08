@@ -61,11 +61,14 @@ seller_count_filter = seller_count_sort[seller_count_sort['seller_id'] >= 52]
 seller_count_reset = seller_count_filter.reset_index()
 seller_count_plot = seller_count_reset.plot.bar(x='seller_city', y='seller_id', rot=0)
 
+print(max_counts_max)
 
 
 '''
+Data cleansing
+
 dc_duplicate_1 = df.duplicated().sum()
 dc_null = df.isnull().sum()
-dc_format = df.value_counts()
+dc_format = df.value_counts() #for unstandardized format
 '''
 
