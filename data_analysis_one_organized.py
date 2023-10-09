@@ -9,28 +9,6 @@ class DataAnalysis:
 
     Args:
         database_path (str): The path to the SQLite database file containing the dataset.
-
-    Methods:
-        fetch_data(query):
-            Fetch data from the database using a SQL query.
-
-        load_data():
-            Load customer, payment, order, and seller data from the database.
-
-        customer_city_analysis():
-            Analyze and return popular customer cities based on customer counts.
-
-        payment_type_analysis():
-            Analyze and return payment type distribution.
-
-        payment_value_median():
-            Calculate and return the median of payment values.
-
-        order_status_customer_city_analysis():
-            Analyze and return the maximum order counts per status for each customer city.
-
-        seller_city_analysis():
-            Analyze and return popular seller cities based on seller counts.
     """
     def __init__(self, database_path):
         self.connection = sqlite3.connect(database_path)
@@ -61,44 +39,50 @@ class DataAnalysis:
         self.order_data = self.fetch_data(query_order)
         self.seller_data = self.fetch_data(query_seller)
 
-    def clean_and_analyze_data(database_path, table_name):
+    def identify_duplicate_missing_data(self, data):
         """
-        Clean and analyze data from a specified table in the 'olist.db' database.
+        Identify duplicate and missing data in the input DataFrame.
 
         Args:
-            database_path (str): The path to the SQLite database file containing the dataset.
-            table_name (str): The name of the table in the database to analyze.
+            data (pd.DataFrame): The DataFrame to be analyzed.
 
         Returns:
-            dict: A dictionary containing analysis results.
+            dict: A dictionary containing information about duplicates and missing values.
+        """
+        duplicate_count = data.duplicated().sum()
+        null_count = data.isnull().sum()
+        
+        analysis_results = {
+            'duplicate_count': duplicate_count,
+            'null_count': null_count,
+        }
+        
+        return analysis_results
+    
+    
+    def clean_and_analyze_data(self, data):
+        """
+        Clean and analyze data from the input DataFrame.
+
+        Args:
+            data (pd.DataFrame): The DataFrame to be analyzed.
+
+        Returns:
+            dict: A dictionary containing analysis results, including duplicates and missing values.
         """
         try:
-            # Connect to the SQLite database
-            connection = sqlite3.connect(database_path)
-
-            # Fetch data from the specified table
-            query = f"SELECT * FROM {table_name};"
-            df = pd.read_sql_query(query, connection)
-
             # Data cleansing
-            duplicate_count = df.duplicated().sum()
-            null_count = df.isnull().sum()
-            value_counts = df.apply(lambda col: col.value_counts())
+            cleaned_data = self.clean_data(data)
 
-            # Analysis results
-            analysis_results = {
-                'duplicate_count': duplicate_count,
-                'null_count': null_count,
-                'value_counts': value_counts,
-            }
+            # Identify duplicates and missing values
+            analysis_results = self.identify_duplicate_missing_data(cleaned_data)
+            
+            # Additional analysis can be added here
+
             return analysis_results
 
         except Exception as e:
             return {'error': str(e)}
-        finally:
-            if 'connection' in locals() and connection:
-                connection.close()
-
     
     def customer_city_analysis(self):
         """
@@ -119,10 +103,10 @@ class DataAnalysis:
         plt.ylabel('Number of Customers')
         plt.title('Popular Customer Cities')
 
-        # Rotate x-axis labels for better readability 
+        # Rotate x-axis labels for better readability
         plt.xticks(rotation=45, ha='right')
 
-        plt.show()
+        #plt.show()
 
         return popular_cities
 
@@ -150,7 +134,7 @@ class DataAnalysis:
 
         plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
-        plt.show()
+        #plt.show()
 
         return sorted_payment_types
 
@@ -167,7 +151,7 @@ class DataAnalysis:
         plt.xlabel('Payment Value')
         plt.title('Box Plot of Payment Value')
 
-        plt.show()
+        #plt.show()
         return payment_value_median
 
     def order_status_customer_city_analysis(self):
@@ -210,7 +194,7 @@ class DataAnalysis:
             plt.text(i, count + 50, str(count), ha='center', va='bottom')
 
         plt.tight_layout()
-        plt.show()
+        #plt.show()
 
         return max_counts_per_status
 
@@ -225,7 +209,7 @@ class DataAnalysis:
         popular_seller_cities = seller_city_counts[seller_city_counts['seller_id'] >= 52]
         popular_seller_cities = popular_seller_cities.reset_index()
         return popular_seller_cities
-    
+
 
 # Create an instance of the DataAnalysis class and load data
 database_path = 'olist.db'
