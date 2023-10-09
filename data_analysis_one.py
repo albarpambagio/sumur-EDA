@@ -1,10 +1,7 @@
 import sqlite3
 import pandas as pd
-import matplotlib as mpls
 import matplotlib.pyplot as plt
-import plotly.express as px
-from plotly.io import renderers
-
+import seaborn as sns
 
 class DataAnalysis:
     """
@@ -128,6 +125,12 @@ class DataAnalysis:
             float: The median payment value.
         """
         payment_value_median = self.payment_data['payment_value'].median()
+        plt.figure(figsize=(8, 6))
+        sns.boxplot(y=self.payment_data['payment_value'])
+        plt.xlabel('Payment Value')
+        plt.title('Box Plot of Payment Value')
+        
+        plt.show()
         return payment_value_median
 
     def order_status_customer_city_analysis(self):
@@ -151,48 +154,27 @@ class DataAnalysis:
         max_counts_per_city = status_and_city_counts.reset_index(level="customer_city")
         max_counts_per_status = max_counts_per_city.groupby('order_status').max()
         
-        data = {
-            'customer_city': ['sao paulo', 'wenceslau guimaraes', 'sao leopoldo', 'zortea', 'vitoria', 'vitoria', 'volta redonda', 'volta redonda'],
-            'order_status': ['approved', 'canceled', 'created', 'delivered', 'invoiced', 'processing', 'shipped', 'unavailable'],
-            'count': [1, 140, 1, 15045, 52, 52, 170, 109]
-        }
+        # Sample data based on your order_status_customer_city_analysis results
+        order_status = ['delivered', 'shipped', 'canceled', 'unavailable', 'invoiced', 'processing', 'approved', 'created']
+        counts = [15045, 170, 140, 109, 52, 52, 1, 1]
 
-        df = pd.DataFrame(data)
+        # Create a bar chart with sorted data
+        sorted_order_status, sorted_counts = zip(*sorted(zip(order_status, counts), key=lambda x: x[1], reverse=True))
 
-        # Create a figure
-        fig = px.sunburst(
-            df,
-            path=['customer_city', 'order_status'],
-            values='count',
-            color='order_status',
-            color_discrete_map={
-                'approved': 'green',
-                'canceled': 'red',
-                'created': 'blue',
-                'delivered': 'purple',
-                'invoiced': 'orange',
-                'processing': 'pink',
-                'shipped': 'cyan',
-                'unavailable': 'gray'
-            }
-        )
+        plt.figure(figsize=(10, 6))
+        plt.bar(sorted_order_status, sorted_counts, color='royalblue')
+        plt.xlabel('Order Status')
+        plt.ylabel('Count')
+        plt.title('Order Status Distribution (Sorted)')
+        plt.xticks(rotation=45, ha='right')
 
-        # Update layout for a donut chart
-        fig.update_traces(marker=dict(line=dict(color='#000000', width=2)))
+        # Display the count values on top of the bars
+        for i, count in enumerate(sorted_counts):
+            plt.text(i, count + 50, str(count), ha='center', va='bottom')
 
-        # Update layout to display customer_city on hover
-        fig.update_traces(textinfo='label+percent parent')
-        fig.update_layout(hovermode='closest')
+        plt.tight_layout()
+        plt.show()
 
-        # Set the title
-        fig.update_layout(title='Order Status by Customer City (Donut Chart)')
-
-        # Render the figure using different renderers
-        renderers.default = 'browser'  # Use the default renderer (browser)
-
-        # Display the figure
-        fig.show(renderer="png", width=800, height=400)
-        
         return max_counts_per_status
 
     def seller_city_analysis(self):
