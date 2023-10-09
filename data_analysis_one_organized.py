@@ -38,51 +38,24 @@ class DataAnalysis:
         self.payment_data = self.fetch_data(query_payment)
         self.order_data = self.fetch_data(query_order)
         self.seller_data = self.fetch_data(query_seller)
-
-    def identify_duplicate_missing_data(self, data):
+    
+    def clean_data(self, df):
         """
-        Identify duplicate and missing data in the input DataFrame.
+        Clean and analyze the given DataFrame.
 
         Args:
-            data (pd.DataFrame): The DataFrame to be analyzed.
+        df (pd.DataFrame): The DataFrame to be cleaned and analyzed.
 
         Returns:
-            dict: A dictionary containing information about duplicates and missing values.
+        int: The number of duplicate rows.
+        pd.Series: A Series containing the count of missing values for each column.
+        pd.Series: A Series containing value counts for each unique row.
         """
-        duplicate_count = data.duplicated().sum()
-        null_count = data.isnull().sum()
-        
-        analysis_results = {
-            'duplicate_count': duplicate_count,
-            'null_count': null_count,
-        }
-        
-        return analysis_results
-    
-    
-    def clean_and_analyze_data(self, data):
-        """
-        Clean and analyze data from the input DataFrame.
+        duplicate_count = df.duplicated().sum()
+        null_count = df.isnull().sum()
+        value_counts = df.value_counts()
+        return duplicate_count, null_count, value_counts
 
-        Args:
-            data (pd.DataFrame): The DataFrame to be analyzed.
-
-        Returns:
-            dict: A dictionary containing analysis results, including duplicates and missing values.
-        """
-        try:
-            # Data cleansing
-            cleaned_data = self.clean_data(data)
-
-            # Identify duplicates and missing values
-            analysis_results = self.identify_duplicate_missing_data(cleaned_data)
-            
-            # Additional analysis can be added here
-
-            return analysis_results
-
-        except Exception as e:
-            return {'error': str(e)}
     
     def customer_city_analysis(self):
         """
@@ -96,17 +69,27 @@ class DataAnalysis:
         popular_cities = sorted_customer_cities[sorted_customer_cities['customer_id'] >= 1521]
         popular_cities = popular_cities.reset_index()
 
-        # Create a bar chart
+        sns.set_style("whitegrid")
+
+        # Create a bar chart with custom styling
         plt.figure(figsize=(12, 6))
-        plt.bar(popular_cities['customer_city'], popular_cities['customer_id'])
-        plt.xlabel('Customer City')
-        plt.ylabel('Number of Customers')
-        plt.title('Popular Customer Cities')
+        ax = sns.barplot(x='customer_city', y='customer_id', data=popular_cities, palette="Blues_d")
+        ax.set(xlabel='Customer City', ylabel='Number of Customers')
+        plt.title('Popular Customer Cities', fontsize=16)
 
         # Rotate x-axis labels for better readability
-        plt.xticks(rotation=45, ha='right')
+        plt.xticks(rotation=45, ha='right', fontsize=12)
+        plt.yticks(fontsize=12)
 
-        #plt.show()
+        # Add data labels to the bars
+        for p in ax.patches:
+            ax.annotate(f"{int(p.get_height())}", (p.get_x() + p.get_width() / 2., p.get_height()),
+                        ha='center', va='bottom', fontsize=12, color='black')
+
+        # Remove the top and right spines
+        sns.despine()
+        
+        plt.show()
 
         return popular_cities
 
@@ -122,6 +105,7 @@ class DataAnalysis:
         sorted_payment_types = valid_payment_types.sort_values(by=["order_id"], ascending=False)
         sorted_payment_types = sorted_payment_types.reset_index()
 
+        '''
         # Create a pie chart
         sorted_payment_types.plot.pie(
             y='order_id',
@@ -133,7 +117,7 @@ class DataAnalysis:
         )
 
         plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
+        '''
         #plt.show()
 
         return sorted_payment_types
@@ -146,11 +130,13 @@ class DataAnalysis:
             float: The median payment value.
         """
         payment_value_median = self.payment_data['payment_value'].median()
+        '''
         plt.figure(figsize=(8, 6))
         sns.boxplot(y=self.payment_data['payment_value'])
         plt.xlabel('Payment Value')
         plt.title('Box Plot of Payment Value')
-
+        '''
+        
         #plt.show()
         return payment_value_median
 
@@ -182,6 +168,7 @@ class DataAnalysis:
         # Create a bar chart with sorted data
         sorted_order_status, sorted_counts = zip(*sorted(zip(order_status, counts), key=lambda x: x[1], reverse=True))
 
+        '''
         plt.figure(figsize=(10, 6))
         plt.bar(sorted_order_status, sorted_counts, color='royalblue')
         plt.xlabel('Order Status')
@@ -195,7 +182,7 @@ class DataAnalysis:
 
         plt.tight_layout()
         #plt.show()
-
+        '''
         return max_counts_per_status
 
     def seller_city_analysis(self):
@@ -230,3 +217,15 @@ max_counts_per_status = data_analyzer.order_status_customer_city_analysis()
 
 # Perform seller city analysis
 popular_seller_cities = data_analyzer.seller_city_analysis()
+
+# Clean and analyze a DataFrame
+#duplicate_count, null_count, value_counts = data_analyzer.clean_data()
+
+'''
+# Print the results
+print("Duplicate Count:", duplicate_count)
+print("Null Count per Column:")
+print(null_count)
+print("Value Counts:")
+print(value_counts)
+'''
