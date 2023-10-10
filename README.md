@@ -1,6 +1,6 @@
 # Suka Makmur E-commerce Data Analysis
 
-This repository contains the analysis of "Suka Makmur," a fictional e-commerce platform. The analysis focuses on understanding customer behavior, payment processing, order management, and seller relationships. The goal is to uncover insights that can guide business decisions and improvements.
+This repository contains the analysis of "Suka Makmur," an e-commerce platform. The analysis focuses on understanding customer behavior, payment processing, order management, and seller relationships. The goal is to uncover insights that can guide business decisions and improvements.
 
 ## Overview
 
@@ -32,5 +32,5 @@ Explore the key findings and recommendations from the analysis:
 
 - **Seller City Analysis**: Identify popular seller cities and explore opportunities for partnerships and growth.
 
-
+Disclaimer: “Suka Makmur” is a fictional entity used solely for the purpose of illustrating the approach and analysis in this report. It does not represent any real organization or entity.
 
