@@ -68,7 +68,7 @@ class DataAnalysis:
         sorted_customer_cities = customer_city_counts.sort_values(by=["customer_unique_id"], ascending=False)
         popular_cities = sorted_customer_cities[sorted_customer_cities['customer_id'] >= 1521]
         popular_cities = popular_cities.reset_index()
-
+        '''
         sns.set_style("whitegrid")
 
         # Create a bar chart with custom styling
@@ -85,11 +85,11 @@ class DataAnalysis:
         for p in ax.patches:
             ax.annotate(f"{int(p.get_height())}", (p.get_x() + p.get_width() / 2., p.get_height()),
                         ha='center', va='bottom', fontsize=12, color='black')
-
+        
         # Remove the top and right spines
         sns.despine()
-        
-        plt.show()
+        '''
+        #plt.show()
 
         return popular_cities
 
@@ -105,21 +105,41 @@ class DataAnalysis:
         sorted_payment_types = valid_payment_types.sort_values(by=["order_id"], ascending=False)
         sorted_payment_types = sorted_payment_types.reset_index()
 
-        '''
-        # Create a pie chart
-        sorted_payment_types.plot.pie(
-            y='order_id',
+        # Create a pie chart with McKinsey-style visualization
+        plt.figure(figsize=(8, 8))
+        colors = sns.color_palette('Blues_d')
+        explode = (0.1, 0.1, 0.1, 0.1)  # Explode a slice for emphasis (adjust as needed)
+
+        # Create the pie chart
+        plt.pie(
+            sorted_payment_types['order_id'],
             labels=sorted_payment_types['payment_type'],
             autopct='%1.1f%%',
-            figsize=(8, 8),
-            title='Payment Type Distribution',
-            legend=False
+            colors=colors,
+            startangle=140,
+            pctdistance=0.85,  # Distance of percentage labels from the center
+            explode=explode,
         )
 
-        plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-        '''
-        #plt.show()
+        # Draw a circle in the center to make it look like a donut chart (optional)
+        centre_circle = plt.Circle((0, 0), 0.70, fc='white')
+        fig = plt.gcf()
+        fig.gca().add_artist(centre_circle)
 
+        # Equal aspect ratio ensures that pie is drawn as a circle
+        plt.axis('equal')
+        plt.title('Payment Type Distribution', fontsize=16)
+
+        # Add a legend (optional, set legend=False to remove it)
+        plt.legend(sorted_payment_types['payment_type'], title='Payment Type', bbox_to_anchor=(1.05, 1), loc='upper left')
+
+        # Add a shadow to the pie chart (optional)
+        plt.gca().set_aspect('equal')
+        plt.tight_layout()
+
+        # Show the plot
+        plt.show()
+        
         return sorted_payment_types
 
     def payment_value_median(self):
