@@ -1,4 +1,5 @@
 # Suka Makmur E-commerce Data Analysis
+![image](https://github.com/albarpambagio/sumur-EDA/assets/46396286/822d7396-583b-4a3a-89e3-467188405fbe)
 
 This repository contains the analysis of "Suka Makmur," an e-commerce platform. The analysis focuses on understanding customer behavior, payment processing, order management, and seller relationships. The goal is to uncover insights that can guide business decisions and improvements.
 
