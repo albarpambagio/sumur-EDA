@@ -104,12 +104,13 @@ class DataAnalysis:
         sorted_payment_types = valid_payment_types.sort_values(by=["order_id"], ascending=False)
         sorted_payment_types = sorted_payment_types.reset_index()
 
-        # Create a pie chart with McKinsey-style visualization
+        """
+        # Create a pie chart 
         plt.figure(figsize=(8, 8))
         colors = sns.color_palette('Blues_d')
         explode = (0.1, 0.1, 0.1, 0.1)  # Explode a slice for emphasis (adjust as needed)
 
-        """
+        
         # Create the pie chart
         plt.pie(
             sorted_payment_types['order_id'],
@@ -148,15 +149,8 @@ class DataAnalysis:
             float: The median payment value.
         """
         payment_value_median = self.payment_data['payment_value'].median()
+
         '''
-        plt.figure(figsize=(8, 6))
-        sns.boxplot(y=self.payment_data['payment_value'])
-        plt.xlabel('Payment Value')
-        plt.title('Box Plot of Payment Value')
-        '''
-        
-        """
-        # Set the McKinsey style
         sns.set_style("whitegrid")
 
         # Create a box plot with custom styling
@@ -171,7 +165,7 @@ class DataAnalysis:
 
         # Remove the top and right spines
         sns.despine()
-        """
+        '''
 
         return payment_value_median
 
@@ -196,6 +190,7 @@ class DataAnalysis:
         max_counts_per_city = status_and_city_counts.reset_index(level="customer_city")
         max_counts_per_status = max_counts_per_city.groupby('order_status').max()
 
+        '''
         # Sample data based on order_status_customer_city_analysis results
         order_status = ['delivered', 'shipped', 'canceled', 'unavailable', 'invoiced', 'processing', 'approved', 'created']
         counts = [15045, 170, 140, 109, 52, 52, 1, 1]
@@ -203,7 +198,6 @@ class DataAnalysis:
         # Create a bar chart with sorted data
         sorted_order_status, sorted_counts = zip(*sorted(zip(order_status, counts), key=lambda x: x[1], reverse=True))
         
-        # Set the McKinsey style
         sns.set_style("whitegrid")
 
         # Create a bar chart with custom styling
@@ -226,7 +220,8 @@ class DataAnalysis:
         # Show the plot
         plt.tight_layout()
         plt.show()
-
+        '''
+        
         return max_counts_per_status
 
     def seller_city_analysis(self):
