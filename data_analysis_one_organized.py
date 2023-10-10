@@ -89,7 +89,6 @@ class DataAnalysis:
         # Remove the top and right spines
         sns.despine()
         '''
-        #plt.show()
 
         return popular_cities
 
@@ -110,6 +109,7 @@ class DataAnalysis:
         colors = sns.color_palette('Blues_d')
         explode = (0.1, 0.1, 0.1, 0.1)  # Explode a slice for emphasis (adjust as needed)
 
+        """
         # Create the pie chart
         plt.pie(
             sorted_payment_types['order_id'],
@@ -136,9 +136,7 @@ class DataAnalysis:
         # Add a shadow to the pie chart (optional)
         plt.gca().set_aspect('equal')
         plt.tight_layout()
-
-        # Show the plot
-        plt.show()
+        """
         
         return sorted_payment_types
 
@@ -156,8 +154,23 @@ class DataAnalysis:
         plt.xlabel('Payment Value')
         plt.title('Box Plot of Payment Value')
         '''
-        
-        #plt.show()
+        # Set the McKinsey style
+        sns.set_style("whitegrid")
+
+        # Create a box plot with custom styling
+        plt.figure(figsize=(8, 6))
+        ax = sns.boxplot(y=self.payment_data['payment_value'], color='royalblue')
+        ax.set(xlabel='Payment Value', ylabel='')
+        plt.title('Box Plot of Payment Value', fontsize=16)
+
+        # Customize the x-axis and y-axis labels
+        plt.xticks(fontsize=12)
+        plt.yticks(fontsize=12)
+
+        # Remove the top and right spines
+        sns.despine()
+
+
         return payment_value_median
 
     def order_status_customer_city_analysis(self):
