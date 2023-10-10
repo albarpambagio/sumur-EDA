@@ -68,7 +68,9 @@ class DataAnalysis:
         sorted_customer_cities = customer_city_counts.sort_values(by=["customer_unique_id"], ascending=False)
         popular_cities = sorted_customer_cities[sorted_customer_cities['customer_id'] >= 1521]
         popular_cities = popular_cities.reset_index()
+        
         '''
+        #Figure_1
         sns.set_style("whitegrid")
 
         # Create a bar chart with custom styling
@@ -105,6 +107,7 @@ class DataAnalysis:
         sorted_payment_types = sorted_payment_types.reset_index()
 
         """
+        #Figure_2
         # Create a pie chart 
         plt.figure(figsize=(8, 8))
         colors = sns.color_palette('Blues_d')
@@ -151,6 +154,7 @@ class DataAnalysis:
         payment_value_median = self.payment_data['payment_value'].median()
 
         '''
+        #Figure_3
         sns.set_style("whitegrid")
 
         # Create a box plot with custom styling
@@ -191,6 +195,7 @@ class DataAnalysis:
         max_counts_per_status = max_counts_per_city.groupby('order_status').max()
 
         '''
+        #Figure_4
         # Sample data based on order_status_customer_city_analysis results
         order_status = ['delivered', 'shipped', 'canceled', 'unavailable', 'invoiced', 'processing', 'approved', 'created']
         counts = [15045, 170, 140, 109, 52, 52, 1, 1]
@@ -199,10 +204,11 @@ class DataAnalysis:
         sorted_order_status, sorted_counts = zip(*sorted(zip(order_status, counts), key=lambda x: x[1], reverse=True))
         
         sns.set_style("whitegrid")
-
+        custom_palette = sns.color_palette("Blues_d", n_colors=len(sorted_order_status))
+        
         # Create a bar chart with custom styling
         plt.figure(figsize=(10, 6))
-        ax = sns.barplot(x=sorted_order_status, y=sorted_counts, color='royalblue')
+        ax = sns.barplot(x=sorted_order_status, y=sorted_counts, palette=custom_palette)
         ax.set(xlabel='Order Status', ylabel='Count')
         plt.title('Order Status Distribution (Sorted)', fontsize=16)
 
@@ -220,7 +226,6 @@ class DataAnalysis:
         # Show the plot
         plt.tight_layout()
         '''
-        
         return max_counts_per_status
 
     def seller_city_analysis(self):
@@ -237,13 +242,15 @@ class DataAnalysis:
         # Sort the DataFrame by 'seller_id' in ascending order
         popular_seller_cities = popular_seller_cities.sort_values(by='seller_id', ascending=False)
         
+        '''
+        #Figure_5
         # Color palette
-        royal_blue = "#4169E1"
+        custom_palette = sns.color_palette("Blues_d", n_colors=len(popular_seller_cities))
 
         # Create a bar plot 
         sns.set_style("whitegrid")
         plt.figure(figsize=(12, 6))
-        ax = sns.barplot(data=popular_seller_cities, x='seller_city', y='seller_id', color=royal_blue)
+        ax = sns.barplot(data=popular_seller_cities, x='seller_city', y='seller_id', palette=custom_palette)
         plt.xlabel('Seller City', fontsize=14)
         plt.ylabel('Number of Sellers', fontsize=14)
         plt.title('Popular Seller Cities', fontsize=16, fontweight='medium')  
@@ -260,7 +267,9 @@ class DataAnalysis:
         sns.despine()
         
         plt.tight_layout()
-        plt.show()
+        '''
+        #plt.show()
+        
         return popular_seller_cities
 
 
@@ -285,13 +294,15 @@ max_counts_per_status = data_analyzer.order_status_customer_city_analysis()
 popular_seller_cities = data_analyzer.seller_city_analysis()
 
 # Clean and analyze a DataFrame
-#duplicate_count, null_count, value_counts = data_analyzer.clean_data()
+#duplicate_count, null_count, value_counts = data_analyzer.clean_data(data_analyzer.customer_data)
 
 '''
 # Print the results
 print("Duplicate Count:", duplicate_count)
+print("")
 print("Null Count per Column:")
 print(null_count)
+print("")
 print("Value Counts:")
 print(value_counts)
 '''
