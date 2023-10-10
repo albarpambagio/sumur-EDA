@@ -1,6 +1,6 @@
 from data_analysis_one_organized import DataAnalysis
 
-
+'''
 def main():
     # Specify the path to your SQLite database
     database_path = 'olist.db'
@@ -10,7 +10,7 @@ def main():
 
     # Load the data from the database
     data_analyzer.load_data()
-    
+
     # Perform customer city analysis
     popular_customer_cities = data_analyzer.customer_city_analysis()
     print("Customer City Analysis:")
@@ -35,10 +35,24 @@ def main():
     popular_seller_cities = data_analyzer.seller_city_analysis()
     print("\nSeller City Analysis:")
     print(popular_seller_cities)
-   
+'''
 
+if __name__ == "__main__":
+    database_path = 'olist.db'
+    table_name = 'olist_order_customer_dataset'
+
+    analysis_results = DataAnalysis.clean_and_analyze_data(database_path, table_name)
+
+    if 'error' in analysis_results:
+        print(f"An error occurred: {analysis_results['error']}")
+    else:
+        print("Data Analysis Results:")
+        print(f"Duplicate Count: {analysis_results['duplicate_count']}")
+        print(f"Null Count:\n{analysis_results['null_count']}")
+        print(f"Value Counts:\n{analysis_results['value_counts']}")
 
 if __name__ == "__main__":
     main()
 
-
+if __name__ == "__main__":
+    main()

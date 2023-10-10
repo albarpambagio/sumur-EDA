@@ -10,7 +10,7 @@ def main():
 
     # Load the data from the database
     data_analyzer.load_data()
-    
+
     # Perform customer city analysis
     popular_customer_cities = data_analyzer.customer_city_analysis()
     print("Customer City Analysis:")
@@ -35,7 +35,7 @@ def main():
     popular_seller_cities = data_analyzer.seller_city_analysis()
     print("\nSeller City Analysis:")
     print(popular_seller_cities)
-   
+
 
 
 if __name__ == "__main__":
