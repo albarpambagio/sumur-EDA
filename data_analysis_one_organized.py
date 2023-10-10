@@ -154,6 +154,8 @@ class DataAnalysis:
         plt.xlabel('Payment Value')
         plt.title('Box Plot of Payment Value')
         '''
+        
+        """
         # Set the McKinsey style
         sns.set_style("whitegrid")
 
@@ -169,7 +171,7 @@ class DataAnalysis:
 
         # Remove the top and right spines
         sns.despine()
-
+        """
 
         return payment_value_median
 
@@ -200,22 +202,31 @@ class DataAnalysis:
 
         # Create a bar chart with sorted data
         sorted_order_status, sorted_counts = zip(*sorted(zip(order_status, counts), key=lambda x: x[1], reverse=True))
+        
+        # Set the McKinsey style
+        sns.set_style("whitegrid")
 
-        '''
+        # Create a bar chart with custom styling
         plt.figure(figsize=(10, 6))
-        plt.bar(sorted_order_status, sorted_counts, color='royalblue')
-        plt.xlabel('Order Status')
-        plt.ylabel('Count')
-        plt.title('Order Status Distribution (Sorted)')
-        plt.xticks(rotation=45, ha='right')
+        ax = sns.barplot(x=sorted_order_status, y=sorted_counts, color='royalblue')
+        ax.set(xlabel='Order Status', ylabel='Count')
+        plt.title('Order Status Distribution (Sorted)', fontsize=16)
+
+        # Rotate x-axis labels for better readability
+        plt.xticks(rotation=45, ha='right', fontsize=12)
+        plt.yticks(fontsize=12)
 
         # Display the count values on top of the bars
         for i, count in enumerate(sorted_counts):
-            plt.text(i, count + 50, str(count), ha='center', va='bottom')
+            ax.annotate(f"{count}", (i, count + 50), ha='center', va='bottom', fontsize=12, color='black')
 
+        # Remove the top and right spines
+        sns.despine()
+
+        # Show the plot
         plt.tight_layout()
-        #plt.show()
-        '''
+        plt.show()
+
         return max_counts_per_status
 
     def seller_city_analysis(self):
