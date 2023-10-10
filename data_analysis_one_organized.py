@@ -219,7 +219,6 @@ class DataAnalysis:
 
         # Show the plot
         plt.tight_layout()
-        plt.show()
         '''
         
         return max_counts_per_status
@@ -234,6 +233,34 @@ class DataAnalysis:
         seller_city_counts = self.seller_data.groupby('seller_city').count()
         popular_seller_cities = seller_city_counts[seller_city_counts['seller_id'] >= 52]
         popular_seller_cities = popular_seller_cities.reset_index()
+        
+        # Sort the DataFrame by 'seller_id' in ascending order
+        popular_seller_cities = popular_seller_cities.sort_values(by='seller_id', ascending=False)
+        
+        # Color palette
+        royal_blue = "#4169E1"
+
+        # Create a bar plot 
+        sns.set_style("whitegrid")
+        plt.figure(figsize=(12, 6))
+        ax = sns.barplot(data=popular_seller_cities, x='seller_city', y='seller_id', color=royal_blue)
+        plt.xlabel('Seller City', fontsize=14)
+        plt.ylabel('Number of Sellers', fontsize=14)
+        plt.title('Popular Seller Cities', fontsize=16, fontweight='medium')  
+
+        # Rotate x-axis labels for better readability
+        plt.xticks(rotation=45, ha='right', fontsize=12)
+        
+        # Display count values on top of the bars
+        for p in ax.patches:
+            ax.annotate(f'{int(p.get_height())}', (p.get_x() + p.get_width() / 2., p.get_height()),
+                        ha='center', va='center', fontsize=12, color='black', fontweight='medium')
+
+        # Add a border to the plot
+        sns.despine()
+        
+        plt.tight_layout()
+        plt.show()
         return popular_seller_cities
 
 
